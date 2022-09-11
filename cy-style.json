@@ -1,0 +1,43 @@
+[
+  {
+      "selector" : "[city *= 'Baghdad']",
+      "style": {"line-color": "blue"}},
+{
+      "selector" : "[city *= 'Nishapur']",
+      "style": {"line-color": "purple"}},
+{
+      "selector" : "[city *= 'Mosul']",
+      "style": {"line-color": "blue"}},
+   {
+      "selector" : "[city *= 'Egypt']",
+      "style": {"line-color": "red"}},
+    {
+      "selector" : "[city *= 'Cairo']",
+      "style": {"line-color": "red"}},
+     {
+      "selector" : "[city *= 'lexandria']",
+      "style": {"line-color": "red"}},
+      {
+      "selector" : "[city *= 'Damascus']",
+      "style": {"line-color": "orange"}},
+{
+      "selector" : "[city *= 'Jerusalem']",
+      "style": {"line-color": "orange"}},
+{
+      "selector" : "[city *= 'Aleppo']",
+      "style": {"line-color": "orange"}},
+{
+      "selector" : "[city *= 'Syria']",
+      "style": {"line-color": "orange"}},
+      {
+  "selector": "[id = 'صلاح الدين']",
+  "style": {
+      "background-color": "#00ff00"
+
+}},
+{
+  "selector": "[id = 'عبد القادر الجيلاني']",
+  "style": {
+      "background-color": "#ffff00"
+
+}}]
