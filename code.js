@@ -215,6 +215,7 @@ Promise.all([
         tippy.show();
 
         cy.nodes().not(n).forEach(hideTippy);
+        document.getElementById('databox').innerHTML= 'Select an edge to get data'
       });
     });
 
@@ -250,9 +251,9 @@ Promise.all([
       document.getElementById('infobox').appendChild(document.createTextNode(`Info: ${$info.dat}`));
       
       });
-    cy.nodes().on('click', function(e){
-      document.getElementById('databox').innerHTML= 'Select an edge to get data'
-    });
+    // cy.nodes().on('click', function(e){
+    //   document.getElementById('databox').innerHTML= 'Select an edge to get data'
+    // });
     ed.on('unselect', function(e){
       document.getElementById('databox').innerHTML= 'Select an edge to get data'
     });
