@@ -215,8 +215,32 @@ Promise.all([
         tippy.show();
 
         cy.nodes().not(n).forEach(hideTippy);
-        document.getElementById('databox').innerHTML= 'Select an edge to get data'
+        
+        document.getElementById('databox').innerHTML= 'Select an edge to get data';
+        // let new_layout = cy.layout({
+        //   name:'breadthfirst',
+          
+        //   roots: n
+        // });
+        // new_layout.run()
+        // cy.animate({
+        //   fit: {
+        //     eles: n.connectedEdges().connectedNodes(),
+        //     padding: 20
+        //   }
+        // })
+        panNode(n)
       });
+      n.on('unselect', function(e){
+        cy.animate({
+          fit: {
+            eles: cy.nodes(),
+            padding: 20
+          }
+        });
+        // cy.nodes().style('background-opacity', '1');
+        // cy.edges().style('line-opacity', '1')
+      })
     });
 
     cy.edges().forEach(function(ed){
@@ -266,3 +290,54 @@ Promise.all([
     });
 
   });
+
+  function centreLayout(n){
+    if (n.connectedEdges().length < 4){
+    let new_layout = cy.layout({
+      name:'breadthfirst',
+      circle: false,
+      roots: n,
+      animate: true,
+      animationDuration: 500
+      
+    });
+    cy.nodes().style('background-opacity', '1');
+    cy.edges().style('line-opacity', '1');
+    n.connectedEdges().connectedNodes().style('background-opacity', '1');
+    n.connectedEdges().style('line-opacity', '1');
+    console.log(n.connectedEdges().length)
+    return new_layout.run();
+    } else {
+      let new_layout = cy.layout({
+        name:'breadthfirst',
+        circle: true,
+        roots: n,
+        animate: true,
+        animationDuration: 500
+    });
+    //New approach = loop through the nodes - if it is 
+    // cy.style().selector('node').style('background-opacity', '0.5').update();
+    // cy.style().selector('edge').style('line-opacity', '0.5').update();
+    cy.nodes().style('background-opacity', '0.5');
+    cy.edges().style('line-opacity', '0.5');
+    n.connectedEdges().connectedNodes().style('background-opacity', '1');
+    n.connectedEdges().style('line-opacity', '1');
+    console.log(n.connectedEdges().length)
+    return new_layout.run();
+  };
+    // console.log(n.connectedEdges().length)
+    // return new_layout.run();
+  }; 
+
+ async function panNode(n) {
+    const response = await(centreLayout(n))
+    if (!response.ok){
+      cy.animate({
+        fit: {
+          eles: n.connectedEdges().connectedNodes(),
+          padding: 40
+         }})
+    
+      }
+    }; 
+
