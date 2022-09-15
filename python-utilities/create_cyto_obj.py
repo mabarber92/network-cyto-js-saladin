@@ -31,7 +31,7 @@ def cyto_obj(data):
 
     return net_data
 
-data_path = path.abspath(path.join(basepath, ".." , "data-source\Edges-2.csv"))
+data_path = path.abspath(path.join(basepath, ".." , "data-source", "Edges-2.csv"))
 out_path = path.abspath(path.join(basepath, ".." , "data2.json"))
 
 data = pd.read_csv(data_path)

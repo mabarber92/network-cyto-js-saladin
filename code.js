@@ -1,3 +1,8 @@
+// Set up global configurations - eventually push out to a config file
+var reducedOpacity = '0.3';
+
+
+
 /* global Promise, fetch, window, cytoscape, document, tippy, _ */
 
 Promise.all([
@@ -211,7 +216,7 @@ Promise.all([
 
       n.data('tippy', tippy);
 
-      n.on('click', function(e){
+      n.on('select', function(e){
         tippy.show();
 
         cy.nodes().not(n).forEach(hideTippy);
@@ -238,8 +243,8 @@ Promise.all([
             padding: 20
           }
         });
-        // cy.nodes().style('background-opacity', '1');
-        // cy.edges().style('line-opacity', '1')
+        cy.nodes().style('background-opacity', '1');
+        cy.edges().style('line-opacity', '1');
       })
     });
 
@@ -292,7 +297,17 @@ Promise.all([
   });
 
   function centreLayout(n){
-    if (n.connectedEdges().length < 4){
+    var layoutFix = document.querySelector("#layout-fix:checked") !== null;
+    console.log(layoutFix);
+    writeEdges(n);
+    if (layoutFix === true){
+      cy.nodes().style('background-opacity', reducedOpacity);
+      cy.edges().style('line-opacity', reducedOpacity);
+      n.connectedEdges().connectedNodes().style('background-opacity', '1');
+      n.connectedEdges().style('line-opacity', '1');
+      return true;
+    }
+    else if (n.connectedEdges().length < 4){
     let new_layout = cy.layout({
       name:'breadthfirst',
       circle: false,
@@ -315,18 +330,15 @@ Promise.all([
         animate: true,
         animationDuration: 500
     });
-    //New approach = loop through the nodes - if it is 
-    // cy.style().selector('node').style('background-opacity', '0.5').update();
-    // cy.style().selector('edge').style('line-opacity', '0.5').update();
-    cy.nodes().style('background-opacity', '0.5');
-    cy.edges().style('line-opacity', '0.5');
+
+    cy.nodes().style('background-opacity', reducedOpacity);
+    cy.edges().style('line-opacity', reducedOpacity);
     n.connectedEdges().connectedNodes().style('background-opacity', '1');
     n.connectedEdges().style('line-opacity', '1');
     console.log(n.connectedEdges().length)
     return new_layout.run();
   };
-    // console.log(n.connectedEdges().length)
-    // return new_layout.run();
+
   }; 
 
  async function panNode(n) {
@@ -341,3 +353,41 @@ Promise.all([
       }
     }; 
 
+function writeEdges(n) {
+  // get the node and write it to the inner div
+  const nodeName = n.data('id');
+  const innerDiv = document.createElement("div");
+  innerDiv.innerHTML = `<h2>Selected node:</h2> <h2 align='right'>${nodeName}</h2> <h2>Direct connections:</h2>`;
+  
+  // get the closest edges and map them into divs - 
+  // eventually turn ids into urls that can be used as a select event
+
+  const targetsDiv = document.createElement('div');
+  const Edges = n.connectedEdges()
+  Edges.forEach(function (edge) {
+    const edgeDiv = document.createElement('div');
+    const targetNodeId = edge.connectedNodes().data('id') 
+    if (edge.data('source') === nodeName){
+    edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('target')}", "${nodeName}")'> <h3 align='right'>${edge.data('target')}</h3></a> 
+    <p>${edge.data('city')}</p>`}
+    else {edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('source')}", "${nodeName}")'> <h3 align='right'>${edge.data('source')}</h3></a> 
+    <p>${edge.data('city')}</p>`};
+    targetsDiv.appendChild(edgeDiv);
+  })
+  
+  console.log(targetsDiv)
+  innerDiv.appendChild(targetsDiv);
+  console.log(innerDiv)
+
+  // Clear the innerHTML and write out the new content div
+  document.getElementById('databox').innerHTML = '';
+  
+  document.getElementById('databox').appendChild(innerDiv);
+};
+
+function selectNode(nodeId, currentNode) {
+ var selector = `#${nodeId}`
+ console.log(selector)
+ cy.$(`node[id = "${currentNode}"]`).unselect()
+ cy.$(`node[id = "${nodeId}"]`).select()
+ };

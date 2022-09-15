@@ -40,4 +40,22 @@
   "style": {
       "background-color": "#ffff00"
 
-}}]
+}},
+{
+      "selector": "[id = 'أبو الطاهر بن عوف إسماعيل بن مكى الزهري']",
+      "style": {
+          "background-color": "#ff9100"
+    
+    }},
+    {
+      "selector": "[id = 'أبو طاهر السلفي']",
+      "style": {
+          "background-color": "#ff0008"
+    
+    }},
+    {
+      "selector": "[id = 'زين الدين أبو  الحسن علي بن إبراهيم بن نجا']",
+      "style": {
+          "background-color": "#0d00ff"
+    
+    }}]
