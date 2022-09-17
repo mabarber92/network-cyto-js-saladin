@@ -470,7 +470,9 @@ function buildStory(newPage, storyId) {
           const selectLink = `javascript: selectNode("${l.link}")`
           
           n.setAttribute('href', selectLink);
-          n.setAttribute('onmouseover', selectLink)}
+          //Below code works - but prior to implementation need to refactor selectNode function to behave differently on mouseover and separate panel for the storytelling to stop links appearing on mouseover
+          // n.setAttribute('onmouseover', selectLink)
+        }
       })
       
     });
