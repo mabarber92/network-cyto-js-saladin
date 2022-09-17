@@ -469,7 +469,8 @@ function buildStory(newPage, storyId) {
         if (l.type == 'node'){
           const selectLink = `javascript: selectNode("${l.link}")`
           
-          n.setAttribute('href', selectLink);}
+          n.setAttribute('href', selectLink);
+          n.setAttribute('onmouseover', selectLink)}
       })
       
     });
