@@ -1,9 +1,10 @@
 // Set up global configurations - eventually push out to a config file
-var reducedOpacity = '0.3';
+var reducedOpacity = '0.1';
 
 
+/* global Promise, fetch, window, cytoscape, document, tippy, _ 
+Added import of the story data to this function - should be accessible by dataArray[2]*/
 
-/* global Promise, fetch, window, cytoscape, document, tippy, _ */
 
 Promise.all([
   fetch('cy-style.json')
@@ -46,6 +47,10 @@ Promise.all([
       elements: dataArray[1],
       layout: { name: 'random' }
     });
+
+    //Get storyData to be used by functions below//
+    
+   
 
     var params = {
       name: 'cola',
@@ -293,7 +298,11 @@ Promise.all([
 
       cy.resize();
     });
-
+  
+  // var storyBox = document.getElementById('storybox');
+  // const currentPage = storyBox.children[0].id;
+  buildStory('', 'storyindex');
+  
   });
 
   function centreLayout(n){
@@ -368,9 +377,9 @@ function writeEdges(n) {
     const edgeDiv = document.createElement('div');
     const targetNodeId = edge.connectedNodes().data('id') 
     if (edge.data('source') === nodeName){
-    edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('target')}", "${nodeName}")'> <h3 align='right'>${edge.data('target')}</h3></a> 
+    edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('target')}")'> <h3 align='right'>${edge.data('target')}</h3></a> 
     <p>${edge.data('city')}</p>`}
-    else {edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('source')}", "${nodeName}")'> <h3 align='right'>${edge.data('source')}</h3></a> 
+    else {edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('source')}")'> <h3 align='right'>${edge.data('source')}</h3></a> 
     <p>${edge.data('city')}</p>`};
     targetsDiv.appendChild(edgeDiv);
   })
@@ -385,9 +394,82 @@ function writeEdges(n) {
   document.getElementById('databox').appendChild(innerDiv);
 };
 
-function selectNode(nodeId, currentNode) {
- var selector = `#${nodeId}`
- console.log(selector)
- cy.$(`node[id = "${currentNode}"]`).unselect()
- cy.$(`node[id = "${nodeId}"]`).select()
- };
+function selectNode(nodeId) {
+ var selected = false;
+ var selector = `#${nodeId}`;
+ 
+ cy.nodes().forEach(function(n){
+  if (n.selected()) {
+    if (n.data("id") !== nodeId){
+      console.log(n.data())
+      n.unselect()
+    } else {var selected = true}
+    }
+ });
+ console.log(selector);
+ console.log(selected);
+//  cy.$(`node[id = "${currentNode}"]`).unselect()
+if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};}
+
+function buildStory(newPage, storyId) {
+  const storyData = new Request('stories.json')
+
+  fetch(storyData)
+    .then((response) => response.json())
+    .then(function(json) {
+      var storyData = json;
+      
+    storyBox = document.getElementById('storybox')
+    if (storyId === "storyindex"){
+      console.log("Index id found");
+      const indexDiv = document.createElement('div');
+      storyData.forEach(function(s){
+        const itemDiv = document.createElement('div');
+        itemDiv.innerHTML = `<a href = "javascript: buildStory('${s.firstStage}', '${s.storyId}')">${s.storyLabel}</a>`;
+        indexDiv.appendChild(itemDiv)
+      });
+      storyBox.innerHTML = ""
+      storyBox.appendChild(indexDiv);
+    }
+    else {
+      const specificStoryData = storyData.find(function(o){
+        return o.storyId === storyId
+      });
+    
+    const currentStoryData = specificStoryData.story.find(function(o){
+      return o.stageId === newPage
+    });
+
+    const nextStage = currentStoryData.nextStage;
+    selectNode(currentStoryData.focusNode)
+    
+    const currentDataOut = document.createElement('div');
+    currentDataOut.innerHTML = currentStoryData.storyHtml;
+    const navFoot = document.createElement('div');
+    let previousLink = "<a href = \"javascript: buildStory('','storyindex')\" >Back to story list</a>";
+    let nextLink = "<a href = \"javascript: buildStory('','storyindex')\" >Back to story list</a>";
+    if (currentStoryData.prevStage !== "") {
+      previousLink = `<a href = "javascript: buildStory('${currentStoryData.prevStage}', '${storyId}')">previous</a>`
+    }
+    if (nextStage !== "") {
+      console.log(nextStage)
+      nextLink = `<a href="javascript: buildStory('${nextStage}', '${storyId}')">next</h>`
+    }
+    navFoot.innerHTML = `${previousLink}.....${nextLink}`;
+    console.log(navFoot)
+    
+    storyBox.innerHTML = ""
+    storyBox.appendChild(currentDataOut);
+    storyBox.appendChild(navFoot);
+    currentStoryData.links.forEach(function(l){
+      const htmlLink = document.getElementsByName(l.id);
+      htmlLink.forEach(function(n) {
+        if (l.type == 'node'){
+          const selectLink = `javascript: selectNode("${l.link}")`
+          
+          n.setAttribute('href', selectLink);}
+      })
+      
+    });
+}})
+ }
