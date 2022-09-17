@@ -20,7 +20,8 @@ def cyto_obj(data):
     for node in nodes:
         net_data.append({'data': {'id': node, 'betacode': node}})
 
-    edges = data[["PERSON ONE", "PERSON TWO", "CITY"]].values.tolist()
+    edges = data[["PERSON ONE", "PERSON TWO", "CITY"]].drop_duplicates().values.tolist()
+    print(len(edges))
 
     for edge in edges:
         if type(edge[2]) is str:
@@ -31,7 +32,7 @@ def cyto_obj(data):
 
     return net_data
 
-data_path = path.abspath(path.join(basepath, ".." , "data-source", "Edges-2.csv"))
+data_path = path.abspath(path.join(basepath, ".." , "data-source", "Edges-3.csv"))
 out_path = path.abspath(path.join(basepath, ".." , "data2.json"))
 
 data = pd.read_csv(data_path)

@@ -329,7 +329,8 @@ Promise.all([
     cy.edges().style('line-opacity', '1');
     n.connectedEdges().connectedNodes().style('background-opacity', '1');
     n.connectedEdges().style('line-opacity', '1');
-    console.log(n.connectedEdges().length)
+    console.log("Record of connected nodes")
+    console.log(n.connectedEdges())
     return new_layout.run();
     } else {
       let new_layout = cy.layout({
@@ -343,6 +344,7 @@ Promise.all([
     cy.nodes().style('background-opacity', reducedOpacity);
     cy.edges().style('line-opacity', reducedOpacity);
     n.connectedEdges().connectedNodes().style('background-opacity', '1');
+    console.log(n.connectedEdges().connectedNodes());
     n.connectedEdges().style('line-opacity', '1');
     console.log(n.connectedEdges().length)
     return new_layout.run();
@@ -366,7 +368,7 @@ function writeEdges(n) {
   // get the node and write it to the inner div
   const nodeName = n.data('id');
   const innerDiv = document.createElement("div");
-  innerDiv.innerHTML = `<h2>Selected node:</h2> <h2 align='right'>${nodeName}</h2> <h2>Direct connections:</h2>`;
+  innerDiv.innerHTML = `<h2>Selected node:</h2> <h2 align='right'>${nodeName}</h2> <h2>Direct connections (${n.connectedEdges().length}):</h2>`;
   
   // get the closest edges and map them into divs - 
   // eventually turn ids into urls that can be used as a select event

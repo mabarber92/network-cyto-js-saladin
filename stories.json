@@ -29,11 +29,25 @@
     "prevStage": "intro",
     "nextStage": "jilaniLinks"},
     {"stageId": "jilaniLinks",
-    "stageLabel": "Links to Jilani",
+    "stageLabel": "His links to Jilani",
     "focusNode": "عبد القادر الجيلاني",
-    "storyHtml": "Test text",
+    "storyHtml": "<p> شرف الإسلام عبد الوهاب بن أبي الفرج الحنبلي was the teacher of عثمان بن مرزوق بن حميد بن سلام القرشي who studied under him in Damascus. عثمان بن مرزوق بن حميد بن سلام القرشي became a disciple of عبد القادر الجيلاني. It is said (reported in ibn Rajab) that he accompanied Jilani on the pilgrimage to Mecca where he became his disciple and read hadith with him. It is also said that أبو مدين شعيب بن الحسين الأنصاري was present with the two men.  According to Vincent Cornell, Abu Madyan never travelled East to perform the pilgrimage,  nor is there any mention in the tabaqat works relating to al-Jilani. One also takes into account how frequently accounts of saintly figures in medieval Islam have been subjected to embellishments and apocryphal ascriptions.</p> <p>And yet al-Jilani’s son, Abdel-Raziq does say, ‘when my father, May Allah have Mercy upon him, went on pilgrimage in the year in which I was with him during it, he met with two Shaykhs, Ibn Marzuq and Abu Madyan. The two wore cloaks from him (ie they became disciples).’  سعد بن عثمان بن مرزوق بن حميد بن سلام القرشي the son of عثمان بن مرزوق بن حميد بن سلام القرشي left Cairo for Baghdad where he remained for the rest of his life. Buried in the ribat of عبد القادر الجيلاني. Funeral prayers were held for him in the madrasa of Abd al-Qadir (Al-Qadisi). However, when it came for him to be buried, the mother of the Caliph sent her servants to take the body and had it interred in a tomb near her tomb place.</p>",
     "links": [],
     "prevStage": "earlyLife",
-    "nextStage": ""
-}
+    "nextStage": "ibnQudamaDamascus"
+},
+{"stageId": "ibnQudamaDamascus",
+    "stageLabel": "Ibn Qudama in Damascus",
+    "focusNode": "",
+    "storyHtml": "",
+    "links": [],
+    "prevStage": "",
+    "nextStage": ""},
+    {"stageId": "",
+    "stageLabel": "",
+    "focusNode": "",
+    "storyHtml": "",
+    "links": [],
+    "prevStage": "",
+    "nextStage": ""}
     ]}]
