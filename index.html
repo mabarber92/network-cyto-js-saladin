@@ -1,16 +1,35 @@
-<!DOCTYPE html>
-<!-- This code is for demonstration purposes only.  You should not hotlink to Github, Rawgit, or files from the Cytoscape.js documentation in your production apps. -->
 <html>
   <head>
     <meta charset=utf-8 />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
 
     <title>Saladin Network Graph Prototype</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href="style.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"> -->
+    <link href="style3.css" rel="stylesheet" />
+
+    <!-- CSS (load bootstrap from a CDN) -->
+    <!-- CSS only -->
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+    crossorigin="anonymous"
+    />
+    <link href="https://fonts.googleapis.com/css?family=Amiri" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    />
+
+    <!-- -Popper for certain bootstrap functionality
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"
+    ></script> -->
 
     <!-- polyfills so the demo works on old browsers, like IE -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.2.20171210/classList.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.2.20171210/classList.min.js"></script>
     <script src="https://unpkg.com/bluebird@3.5.2/js/browser/bluebird.js"></script>
     <script src="https://unpkg.com/whatwg-fetch@3.0.0/dist/fetch.umd.js"></script>
 
@@ -29,31 +48,69 @@
     <script src="code.js"></script>
   </head>
   <body>
-    <div id="cy"></div>
+    <!--Title row with config button-->
 
-    <span class="fa fa-bars config-toggle" id="config-toggle"></span>
-
-    <div id="config" class="config">
-
-      <div class="preamble">
-        <span class="label label-info">Saladin Network Graph Prototype</span>
-
-        <p>This is test of functionality of cytoscape for a Saladin network graph coded directly in javascript. Script adapted from that <a href = "https://github.com/cytoscape/cytoscape.js/tree/master/documentation/demos/colajs-graph">here</a>. 
-          More functionality and style to come. For the moment clicking on nodes will produce tooltips and clicking on edges will populate data into this side panel.</p>
-         
-      </div>
-      <div>
-        <input type = "checkbox" id="layout-fix" name="layout-fix" value = "yes">
-        <label for="layout-fix">Fix the current layout</label>
-      </div>
-      <div id="databox">
-        Click on an edge to see data here
-      </div>
-      <div id ="storybox">
-        <div id = "storyindex">
-
+    <div class="row bg-light">
+        <div class="col text-start ">
+            <button type="button" class="btn btn-dark">
+                <i class="bi bi-gear"></i>
+            </button>
         </div>
-      </div>
+        <div class="col text-end">
+            <h1>From al-Jilani to Saladin: a network</h1>
+        </div>
     </div>
+    <!--Row containing all of the key info and used for navigation-->
+    <div id = "topBar" class="row bg-secondary">
+        
+        <div class="col-7">            
+                <h3>Current selected node:</h3>           
+                <h2 id = "nodeSelection">None (click a node to select it)</h2>            
+                <button class ="btn btn-light" id="left-toggle">See connections</button>
+        </div>
+            
+        <div class="col-5 text-end">
+            
+            <h2 id="storyName"></h2>
+            <button type="button" class ="btn btn-light" id="config-toggle">
+                <i class="bi bi-book"></i>
+                Read a data story
+            </button>
+            <div>
+                <input type = "checkbox" id="layout-fix" name="layout-fix" value = "yes">
+                <label for="layout-fix">Fix the current layout</label>
+              </div> 
+            <!-- <button type="button" class ="btn btn-light" id="left-toggle">
+                <i class="bi bi-book"></i>
+                Read a data story 2
+            </button>              -->
+        </div> 
+        <!-- Provisionally put config here-->
+      
+    </div>
+
+
+<div id="config" class="config bg-light">    
+    <div id="storybox">
+        <div id="storyindex"></div>
+    </div>
+</div>
+
+
+
+<div id="cy">
+
+
+
+</div>
+
+<div id="config2" class="config2 bg-light">
+    <div id="databox">
+            
+    </div>
+</div>
+    <!--Row containing the main body divs - network in the middle and two collapsable panels on each side-->
+
+
   </body>
 </html>

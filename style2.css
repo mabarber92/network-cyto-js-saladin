@@ -12,28 +12,42 @@ body {
 }
 
 #cy {
-  position: absolute;
-  
- 
-  left: 0;
-  top: 25%;
-  bottom: 0;
-  right: 15%;
+  display: block;
+  width: 100%;
+  height: 82%;
  
   /* position: absolute;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  right: auto; */
+}
+
+.leftpanel {
+  position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  right: 15%; */
+  height: 100%;
+  width: 17em;
+  background: rgba(0, 0, 0, 0.666);
+  box-sizing: border-box;
+  padding: 1em;
+  color: #fff;
+  transition-property: opacity;
+  transition-duration: 250ms;
+  transition-timing-function: ease-out;
+  overflow: auto;
+  z-index: 1;
 }
 
-.config {
-  
+.rightpanel {
+  position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
   height: 100%;
-  width: 15%;
+  width: 17em;
   background: rgba(0, 0, 0, 0.666);
   box-sizing: border-box;
   padding: 1em;
@@ -79,7 +93,7 @@ a:hover {
   margin: 0;
 }
 
-.config-toggle {
+/* .left-toggle {
   position: absolute;
   right: 0;
   top: 0;
@@ -90,12 +104,32 @@ a:hover {
   z-index: 9999999;
 }
 
-.config-closed .config {
+.right-toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 1em;
+  margin: 0.2em;
+  cursor: pointer;
+  color: #fff;
+  z-index: 9999999;
+} */
+
+.left-closed .leftpanel {
   opacity: 0;
   pointer-events: none;
 }
 
-.config-closed #cy {
+.left-closed #cy {
+  left: 0;
+}
+
+.right-closed .rightpanel {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.right-closed #cy {
   right: 0;
 }
 

@@ -295,10 +295,19 @@ Promise.all([
     });
 
     $('#config-toggle').addEventListener('click', function(){
+      
       $('body').classList.toggle('config-closed');
 
       cy.resize();
     });
+
+    $('#left-toggle').addEventListener('click', function(){
+      $('body').classList.toggle('left-closed');
+
+      cy.resize();
+    });
+
+    
   
   // var storyBox = document.getElementById('storybox');
   // const currentPage = storyBox.children[0].id;
@@ -368,22 +377,27 @@ Promise.all([
 function writeEdges(n) {
   // get the node and write it to the inner div
   const nodeName = n.data('id');
+  const nodeHeader = document.getElementById("nodeSelection")
   const innerDiv = document.createElement("div");
-  innerDiv.innerHTML = `<h2>Selected node:</h2> <h2 align='right'>${nodeName}</h2> <h2>Direct connections (${n.connectedEdges().length}):</h2>`;
+  nodeHeader.innerText = `${nodeName}`;
   
+  const connectionButton = document.getElementById("left-toggle");
+  connectionButton.innerText = `Explore ${n.connectedEdges().length} direct connection(s)`
+
   // get the closest edges and map them into divs - 
-  // eventually turn ids into urls that can be used as a select event
+ 
 
   const targetsDiv = document.createElement('div');
   const Edges = n.connectedEdges()
   Edges.forEach(function (edge) {
     const edgeDiv = document.createElement('div');
+    edgeDiv.setAttribute('class', 'card mb-2')
     const targetNodeId = edge.connectedNodes().data('id') 
     if (edge.data('source') === nodeName){
-    edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('target')}")'> <h3 align='right'>${edge.data('target')}</h3></a> 
-    <p>${edge.data('city')}</p>`}
-    else {edgeDiv.innerHTML = `<a href = 'javascript: selectNode("${edge.data('source')}")'> <h3 align='right'>${edge.data('source')}</h3></a> 
-    <p>${edge.data('city')}</p>`};
+    edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('target')}")'> ${edge.data('target')}</a></div> 
+    <p class="card-text">${edge.data('city')}</p>`}
+    else {edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('source')}")'>${edge.data('source')}</a></div> 
+    <p class="card-text">${edge.data('city')}</p>`};
     targetsDiv.appendChild(edgeDiv);
   })
   
@@ -411,10 +425,28 @@ function selectNode(nodeId) {
  });
  console.log(selector);
  console.log(selected);
-//  cy.$(`node[id = "${currentNode}"]`).unselect()
-if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};}
+//  cy.$(`node[id = "${currentNode}"]`).unselect();
+if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};};
+
+function hoverNode(nodeId) {
+  var selected = false;
+  var selector = `#${nodeId}`;
+  document.getElementById("layout-fix").checked= true;
+  cy.nodes().forEach(function(n){
+   if (n.selected()) {
+     if (n.data("id") !== nodeId){
+       console.log(n.data())
+       n.unselect()
+     } else {var selected = true}
+     }
+  });
+  console.log(selector);
+  console.log(selected);
+ //  cy.$(`node[id = "${currentNode}"]`).unselect()
+ if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};}
 
 function buildStory(newPage, storyId) {
+  document.getElementById("layout-fix").checked= false;
   const storyData = new Request('stories.json')
 
   fetch(storyData)
@@ -425,10 +457,16 @@ function buildStory(newPage, storyId) {
     storyBox = document.getElementById('storybox')
     if (storyId === "storyindex"){
       console.log("Index id found");
+      const storyHeader = document.getElementById("storyName");
+      storyHeader.innerText = "";
       const indexDiv = document.createElement('div');
+      const indexHeader = document.createElement('h3');
+      indexHeader.innerText = "Choose a data story";
+      indexDiv.appendChild(indexHeader)
       storyData.forEach(function(s){
         const itemDiv = document.createElement('div');
-        itemDiv.innerHTML = `<a href = "javascript: buildStory('${s.firstStage}', '${s.storyId}')">${s.storyLabel}</a>`;
+        itemDiv.setAttribute('class', 'card mb-2')
+        itemDiv.innerHTML = `<div class="card-header">${s.storyLabel}</div><p class = "card-text"> Follow Ibn Naja's journey from Baghdad, through Damascus to Cairo. <a href = "javascript: buildStory('${s.firstStage}', '${s.storyId}')">Read the story</a></p>`;
         indexDiv.appendChild(itemDiv)
       });
       storyBox.innerHTML = ""
@@ -443,10 +481,15 @@ function buildStory(newPage, storyId) {
       return o.stageId === newPage
     });
 
+    const storyHeader = document.getElementById("storyName");
+    storyHeader.innerText = specificStoryData.storyLabel
+
     const nextStage = currentStoryData.nextStage;
-    selectNode(currentStoryData.focusNode)
-    
+    selectNode(currentStoryData.focusNode);
+    const stageHeader = document.createElement('h3');
+    stageHeader.innerText = currentStoryData.stageLabel;
     const currentDataOut = document.createElement('div');
+    currentDataOut.setAttribute('class', 'narrativepsg');
     currentDataOut.innerHTML = currentStoryData.storyHtml;
     const navFoot = document.createElement('div');
     let previousLink = "<a href = \"javascript: buildStory('','storyindex')\" >Back to story list</a>";
@@ -461,7 +504,8 @@ function buildStory(newPage, storyId) {
     navFoot.innerHTML = `${previousLink}.....${nextLink}`;
     console.log(navFoot)
     
-    storyBox.innerHTML = ""
+    storyBox.innerHTML = "";
+    storyBox.appendChild(stageHeader);
     storyBox.appendChild(currentDataOut);
     storyBox.appendChild(navFoot);
     currentStoryData.links.forEach(function(l){
@@ -469,10 +513,11 @@ function buildStory(newPage, storyId) {
       htmlLink.forEach(function(n) {
         if (l.type == 'node'){
           const selectLink = `javascript: selectNode("${l.link}")`
-          
+          const hoverLink = `javascript: hoverNode("${l.link}")`
           n.setAttribute('href', selectLink);
-          //Below code works - but prior to implementation need to refactor selectNode function to behave differently on mouseover and separate panel for the storytelling to stop links appearing on mouseover
-          // n.setAttribute('onmouseover', selectLink)
+          //Below code works - but it's a really janky fix that's confusing to the user - constantly setting the layout fix
+          //Reverse approach - have a button to refocus layout on the current node.
+          n.setAttribute('onmouseover', hoverLink)
         }
       })
       
