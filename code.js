@@ -45,7 +45,8 @@ Promise.all([
       container: document.getElementById('cy'),
       style: dataArray[0],
       elements: dataArray[1],
-      layout: { name: 'random' }
+      layout: { name: 'random' },
+      selectionType: 'additive'
     });
 
     //Get storyData to be used by functions below//
