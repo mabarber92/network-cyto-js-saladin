@@ -65,31 +65,40 @@
         
         <div class="col-7">            
                 <h3>Current selected node:</h3>           
-                <h2 id = "nodeSelection">None (click a node to select it)</h2>            
-                <button class ="btn btn-light" id="left-toggle">See connections</button>
+                <h2 id = "nodeSelection">None (click a node to select it)</h2>
+                <div class="d-grid gap-2 col-lg-12 col-md-12 col-12 d-sm-block p-2">
+                    
+                        <button class ="btn btn-large btn-light" id="left-toggle">
+                            <i class="bi bi-people"></i>
+                            See connections
+                        </button>
+                   
+                    
+                        <button class ="btn btn-large btn-light" id="refocus-layout" onclick="focusLayout()">
+                            <i class="bi bi-geo"></i>
+                            Focus graph on node
+                        </button>
+                    
+                                  
+                </div>            
+                
         </div>
             
-        <div class="col-5 text-end">
+        <div class="col-5 text-end p-3">
             
-            <h2 id="storyName"></h2>
+            
             <button type="button" class ="btn btn-light" id="config-toggle">
                 <i class="bi bi-book"></i>
                 Read a data story
             </button>
-            <div>
-                <input type = "checkbox" id="layout-fix" name="layout-fix" value = "yes">
-                <label for="layout-fix">Fix the current layout</label>
-              </div> 
-            <!-- <button type="button" class ="btn btn-light" id="left-toggle">
-                <i class="bi bi-book"></i>
-                Read a data story 2
-            </button>              -->
+            <h3 id="storyName"></h3>
+
         </div> 
-        <!-- Provisionally put config here-->
+
       
     </div>
 
-
+<div id="content">
 <div id="config" class="config bg-light">    
     <div id="storybox">
         <div id="storyindex"></div>
@@ -106,8 +115,9 @@
 
 <div id="config2" class="config2 bg-light">
     <div id="databox">
-            
+        Select a node or edge to see information here    
     </div>
+</div>
 </div>
     <!--Row containing the main body divs - network in the middle and two collapsable panels on each side-->
 

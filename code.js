@@ -1,5 +1,6 @@
 // Set up global configurations - eventually push out to a config file
 var reducedOpacity = '0.1';
+let selectedNode = ""
 
 
 /* global Promise, fetch, window, cytoscape, document, tippy, _ 
@@ -254,6 +255,8 @@ Promise.all([
       })
     });
 
+    
+
     cy.edges().forEach(function(ed){
       var d = ed.data('city');
       var s = ed.data('source');
@@ -295,14 +298,15 @@ Promise.all([
     });
 
     $('#config-toggle').addEventListener('click', function(){
-      
-      $('body').classList.toggle('config-closed');
+      const contentDiv = document.getElementById('content')
+      contentDiv.classList.toggle('config-closed');
 
       cy.resize();
     });
 
     $('#left-toggle').addEventListener('click', function(){
-      $('body').classList.toggle('left-closed');
+      const contentDiv = document.getElementById('content')
+      contentDiv.classList.toggle('left-closed');
 
       cy.resize();
     });
@@ -316,17 +320,9 @@ Promise.all([
   });
 
   function centreLayout(n){
-    var layoutFix = document.querySelector("#layout-fix:checked") !== null;
-    console.log(layoutFix);
-    writeEdges(n);
-    if (layoutFix === true){
-      cy.nodes().style('background-opacity', reducedOpacity);
-      cy.edges().style('line-opacity', reducedOpacity);
-      n.connectedEdges().connectedNodes().style('background-opacity', '1');
-      n.connectedEdges().style('line-opacity', '1');
-      return true;
-    }
-    else if (n.connectedEdges().length < 4){
+    
+    
+    if (n.connectedEdges().length < 4){
     let new_layout = cy.layout({
       name:'breadthfirst',
       circle: false,
@@ -335,12 +331,7 @@ Promise.all([
       animationDuration: 500
       
     });
-    cy.nodes().style('background-opacity', '1');
-    cy.edges().style('line-opacity', '1');
-    n.connectedEdges().connectedNodes().style('background-opacity', '1');
-    n.connectedEdges().style('line-opacity', '1');
-    console.log("Record of connected nodes")
-    console.log(n.connectedEdges())
+    changeOpacity(n);
     return new_layout.run();
     } else {
       let new_layout = cy.layout({
@@ -351,18 +342,15 @@ Promise.all([
         animationDuration: 500
     });
 
-    cy.nodes().style('background-opacity', reducedOpacity);
-    cy.edges().style('line-opacity', reducedOpacity);
-    n.connectedEdges().connectedNodes().style('background-opacity', '1');
-    console.log(n.connectedEdges().connectedNodes());
-    n.connectedEdges().style('line-opacity', '1');
+    changeOpacity(n)
     console.log(n.connectedEdges().length)
     return new_layout.run();
   };
 
   }; 
 
- async function panNode(n) {
+ async function refocusPanNode(n) {
+    
     const response = await(centreLayout(n))
     if (!response.ok){
       cy.animate({
@@ -372,7 +360,33 @@ Promise.all([
          }})
     
       }
-    }; 
+    };
+
+    async function panNode(n) {
+      selectedNode = n
+      const response = await(changeOpacity(n))
+      if (!response.ok){
+        writeEdges(n)
+        cy.animate({
+          fit: {
+            eles: n.connectedEdges().connectedNodes(),
+            padding: 40
+           }})
+      
+        }
+      };
+  
+  function changeOpacity(n) {
+    cy.nodes().style('background-opacity', reducedOpacity);
+    cy.edges().style('line-opacity', reducedOpacity);
+    n.connectedEdges().connectedNodes().style('background-opacity', '1');
+    n.connectedEdges().style('line-opacity', '1');
+    return true
+  }
+
+  function focusLayout() {
+      refocusPanNode(selectedNode)
+    }
 
 function writeEdges(n) {
   // get the node and write it to the inner div
@@ -382,7 +396,7 @@ function writeEdges(n) {
   nodeHeader.innerText = `${nodeName}`;
   
   const connectionButton = document.getElementById("left-toggle");
-  connectionButton.innerText = `Explore ${n.connectedEdges().length} direct connection(s)`
+  connectionButton.innerHTML = `<i class="bi bi-people"></i> Explore ${n.connectedEdges().length} direct connection(s)`
 
   // get the closest edges and map them into divs - 
  
@@ -428,26 +442,11 @@ function selectNode(nodeId) {
 //  cy.$(`node[id = "${currentNode}"]`).unselect();
 if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};};
 
-function hoverNode(nodeId) {
-  var selected = false;
-  var selector = `#${nodeId}`;
-  document.getElementById("layout-fix").checked= true;
-  cy.nodes().forEach(function(n){
-   if (n.selected()) {
-     if (n.data("id") !== nodeId){
-       console.log(n.data())
-       n.unselect()
-     } else {var selected = true}
-     }
-  });
-  console.log(selector);
-  console.log(selected);
- //  cy.$(`node[id = "${currentNode}"]`).unselect()
- if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};}
 
 function buildStory(newPage, storyId) {
-  document.getElementById("layout-fix").checked= false;
+  
   const storyData = new Request('stories.json')
+  const storyButton = document.getElementById("config-toggle");
 
   fetch(storyData)
     .then((response) => response.json())
@@ -457,6 +456,7 @@ function buildStory(newPage, storyId) {
     storyBox = document.getElementById('storybox')
     if (storyId === "storyindex"){
       console.log("Index id found");
+      storyButton.innerHTML = '<i class="bi bi-book"></i> Read a data story'
       const storyHeader = document.getElementById("storyName");
       storyHeader.innerText = "";
       const indexDiv = document.createElement('div');
@@ -482,7 +482,9 @@ function buildStory(newPage, storyId) {
     });
 
     const storyHeader = document.getElementById("storyName");
-    storyHeader.innerText = specificStoryData.storyLabel
+    storyHeader.innerText = `Reading the story of: ${specificStoryData.storyLabel}`
+    
+    storyButton.innerHTML = '<i class="bi bi-book"></i> Toggle Story Panel'
 
     const nextStage = currentStoryData.nextStage;
     selectNode(currentStoryData.focusNode);
@@ -512,12 +514,12 @@ function buildStory(newPage, storyId) {
       const htmlLink = document.getElementsByName(l.id);
       htmlLink.forEach(function(n) {
         if (l.type == 'node'){
-          const selectLink = `javascript: selectNode("${l.link}")`
-          const hoverLink = `javascript: hoverNode("${l.link}")`
+          const selectLink = `javascript: selectNode("${l.link}")`;
+          const offHover = `javascript: selectNode("${currentStoryData.focusNode}")`;
           n.setAttribute('href', selectLink);
-          //Below code works - but it's a really janky fix that's confusing to the user - constantly setting the layout fix
-          //Reverse approach - have a button to refocus layout on the current node.
-          n.setAttribute('onmouseover', hoverLink)
+          //Below code works - need to find a way of not fixing hovered node
+          // n.setAttribute('onmouseover', selectLink);
+          // n.setAttribute('onmouseout', offHover);
         }
       })
       

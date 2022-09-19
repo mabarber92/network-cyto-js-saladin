@@ -15,13 +15,12 @@ body {
 
 
 #cy {
+  display: inline-block;
   position: absolute;
-  
- 
+  height: 82%;
   left: 0;
-  top: 20%;
-  bottom: 0;
   right: 0;
+  
  
   /* position: absolute;
   left: 0;
