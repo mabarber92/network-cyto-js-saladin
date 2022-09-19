@@ -12,7 +12,7 @@
     {"stageId": "earlyLife",
     "stageLabel": "His early life",
     "focusNode": "عبد الْوَاحِد بن مُحَمَّد بن عَليّ بن أَحْمد الشِّيرَازِيّ أبي الفرج",
-    "storyHtml": "<p><a name = 'IbnNaja'>Zayn al-Din Ibn Naja</a> was the grandson of <a name='AbuFaraj'>Ahmad al-Shirazi Abi al-Faraj</a> who was considered one of the greatest Hanbali scholars of his age and who moved from Baghdad to Palestine then Damascus where he taught. He played a seminal role in the spread of the Hanbali school in Syria. Ibn Rajab considered him to be the greatest Hanbali scholar in Syria. <a name='IbnAsakir1'>Ibn Asakir</a> notes that al-Shirazi spread the Hanbali madhhab in Jerusalem and Damascus</p>.<p><a name ='SharafIslam'>Sharaf al-Islam Abd al-Wahab</a> was the son of <a name='AbuFaraj'>Abu Faraj</a> and the uncle of <a name='IbnNaja'>Ibn Naja</a>.</p>",
+    "storyHtml": "<p><a name = 'IbnNaja'>Zayn al-Din Ibn Naja</a> was the grandson of <a name='AbuFaraj'>Ahmad al-Shirazi Abi al-Faraj</a> who was considered one of the greatest Hanbali scholars of his age and who moved from Baghdad to Palestine then Damascus where he taught. He played a seminal role in the spread of the Hanbali school in Syria. Ibn Rajab considered him to be the greatest Hanbali scholar in Syria. <a name='IbnAsakir1'>Ibn Asakir</a> notes that al-Shirazi spread the Hanbali madhhab in Jerusalem and Damascus.</p><p><a name ='SharafIslam'>Sharaf al-Islam Abd al-Wahab</a> was the son of <a name='AbuFaraj'>Abu Faraj</a> and the uncle of <a name='IbnNaja'>Ibn Naja</a>.</p>",
     "links": [
         {"id": "IbnNaja",
         "type": "node",
