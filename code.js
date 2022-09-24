@@ -216,17 +216,25 @@ Promise.all([
         },
         
       ].map(function( link ){
-        return h('a', { target: '_blank', href: link.url, 'class': 'tip-link' }, [ t(link.name) ]);
+        return h('div', {'class': 'tip-link' }, [ t(link.name) ]);
       });
 
       var tippy = makeTippy(n, h('div', {}, $links));
 
       n.data('tippy', tippy);
 
-      n.on('select', function(e){
+      n.on('mouseover', function(){
         tippy.show();
 
         cy.nodes().not(n).forEach(hideTippy);
+      })
+
+      n.on('mouseout', function(){
+        n.forEach(hideTippy);
+      })
+
+      n.on('select', function(e){
+        
         
         document.getElementById('databox').innerHTML= 'Select an edge to get data';
         // let new_layout = cy.layout({
@@ -309,6 +317,7 @@ Promise.all([
       contentDiv.classList.toggle('left-closed');
 
       cy.resize();
+      
     });
 
     
@@ -408,9 +417,9 @@ function writeEdges(n) {
     edgeDiv.setAttribute('class', 'card mb-2')
     const targetNodeId = edge.connectedNodes().data('id') 
     if (edge.data('source') === nodeName){
-    edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('target')}")'> ${edge.data('target')}</a></div> 
+    edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('target')}")' onmouseover = 'javascript: hoverNode("${edge.data('target')}")'> ${edge.data('target')}</a></div> 
     <p class="card-text">${edge.data('city')}</p>`}
-    else {edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('source')}")'>${edge.data('source')}</a></div> 
+    else {edgeDiv.innerHTML = `<div class="card-header" align='right'><a href = 'javascript: selectNode("${edge.data('source')}")'  onmouseover = 'javascript: hoverNode("${edge.data('target')}")'>${edge.data('source')}</a></div> 
     <p class="card-text">${edge.data('city')}</p>`};
     targetsDiv.appendChild(edgeDiv);
   })
@@ -441,6 +450,56 @@ function selectNode(nodeId) {
  console.log(selected);
 //  cy.$(`node[id = "${currentNode}"]`).unselect();
 if (selected === false){cy.$(`node[id = "${nodeId}"]`).select()};};
+
+function hoverNode(nodeId) {
+  var selected = false;
+  var selector = `#${nodeId}`;
+  hideAllTippies();
+
+  cy.nodes().forEach(function(n){    
+    if (n.data("id") === nodeId){
+      n.data('tippy').show()
+  }});
+    
+  
+  console.log(selector);
+  console.log(selected);
+ //  cy.$(`node[id = "${currentNode}"]`).unselect();
+//  if (selected === false){cy.$(`node[id = "${selector}"]`).style('label', 'id');};};
+
+// console.log(cy.$(`node[id = "${selector}"]`.node().popperRef))
+
+// var tippy = makeTippy(cy.filter(`[id = "${selector}"]`), `<div>${nodeId}</div>`);
+
+
+
+// tippy.show()
+};
+
+var makeTippy = function(node, html){
+  return tippy( node.popperRef(), {
+    html: html,
+    trigger: 'manual',
+    arrow: true,
+    placement: 'bottom',
+    hideOnClick: false,
+    interactive: true
+  } ).tooltips[0];
+};
+
+
+
+var hideTippy = function(node){
+  var tippy = node.data('tippy');
+
+  if(tippy != null){
+    tippy.hide();
+  }
+};
+
+var hideAllTippies = function(){
+  cy.nodes().forEach(hideTippy);
+};
 
 
 function buildStory(newPage, storyId) {
@@ -515,10 +574,10 @@ function buildStory(newPage, storyId) {
       htmlLink.forEach(function(n) {
         if (l.type == 'node'){
           const selectLink = `javascript: selectNode("${l.link}")`;
-          const offHover = `javascript: selectNode("${currentStoryData.focusNode}")`;
+          const onHover = `javascript: hoverNode("${l.link}")`;
           n.setAttribute('href', selectLink);
           //Below code works - need to find a way of not fixing hovered node
-          // n.setAttribute('onmouseover', selectLink);
+          n.setAttribute('onmouseover', onHover);
           // n.setAttribute('onmouseout', offHover);
         }
       })
